@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="camera" class="main.java.Camera" ></bean>
+    <bean id="photographer" class="main.java.Phorographer" ></bean>
+
+    <aop:config>
+        <aop:aspect ref="photographer">
+            <aop:pointcut
+                    expression="execution(* main.java.Camera.takeAPicture(..))"
+                    id="shoot"/>
+            <aop:before
+                    pointcut-ref="shoot"
+                    method="prepareToSnap"/>
+            <aop:before
+                    pointcut-ref="shoot"
+                    method="setLights"/>
+            <aop:after-returning
+                    pointcut-ref="shoot"
+                    method="printPhoto"/>
+
+
+        </aop:aspect>
+
+        <!--яка камера найкраща-->
+
+        <aop:aspect>
+            <aop:declare-parents types-matching="main.java.Camera+"
+                                 implement-interface="main.java.Contestant"
+                                 default-impl="main.java.Winner"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>
